@@ -66,19 +66,6 @@ export const useOldMaidGame = () => {
     }
   }, []);
 
-  const checkInitialPairs = useCallback(() => {
-    setIsCheckingInitialPairs(true);
-    // プレイヤーのペアを確認
-    findAndRemovePairs(0);
-    // NPCのペアを確認
-    findAndRemovePairs(1);
-    // 少し待ってからコイントスフェーズに移行
-    setTimeout(() => {
-      setIsCheckingInitialPairs(false);
-      setIsCoinTossing(true);
-    }, 2000);
-  }, [findAndRemovePairs]);
-
   const initializeGame = useCallback(() => {
     const suits: CardType["suit"][] = ["♠", "♥", "♦", "♣"];
     const numbers = Array.from({ length: 13 }, (_, i) => i + 1);
@@ -112,15 +99,24 @@ export const useOldMaidGame = () => {
     setGameOver(false);
     setDiscardedPairs([]);
     setGameResult(null);
-    checkInitialPairs();
-  }, [checkInitialPairs]);
+    setIsCoinTossing(true); // コイントスから開始
+  }, []);
 
   const tossCoin = useCallback(() => {
     const result = Math.random() < 0.5 ? "先攻" : "後攻";
     setCoinResult(result);
     setCurrentTurn(result === "先攻" ? 0 : 1);
     setIsCoinTossing(false);
-  }, []);
+    setIsCheckingInitialPairs(true); // コイントス後にペア確認を開始
+    // プレイヤーのペアを確認
+    findAndRemovePairs(0);
+    // NPCのペアを確認
+    findAndRemovePairs(1);
+    // 少し待ってからゲーム開始
+    setTimeout(() => {
+      setIsCheckingInitialPairs(false);
+    }, 2000);
+  }, [findAndRemovePairs]);
 
   const drawCard = useCallback(
     (fromPlayerIndex: number, toPlayerIndex: number) => {
@@ -149,6 +145,31 @@ export const useOldMaidGame = () => {
     }
   }, [players]);
 
+  const checkHandAndGameOver = useCallback(
+    (playerIndex: number) => {
+      const player = players[playerIndex];
+
+      // 手札が空の場合は、そのプレイヤーの勝利
+      if (player.cards.length === 0) {
+        setGameOver(true);
+        setGameResult({
+          winner: player.name as "プレイヤー" | "NPC",
+          hasJoker: false, // 相手はジョーカーを持っているはず
+        });
+      }
+      // 手札が1枚の場合、そのカードがジョーカーならそのプレイヤーの負け
+      else if (player.cards.length === 1 && player.cards[0].number === 0) {
+        setGameOver(true);
+        setGameResult({
+          winner: players[1 - playerIndex].name as "プレイヤー" | "NPC",
+          hasJoker: true,
+        });
+      }
+      // 手札が1枚でもジョーカー以外なら、まだゲーム続行の可能性があるためゲーム終了とはしない
+    },
+    [players]
+  );
+
   const handleCardPress = useCallback(
     (index: number) => {
       if (
@@ -162,7 +183,7 @@ export const useOldMaidGame = () => {
       drawCard(nextPlayerIndex, currentTurn);
       findAndRemovePairs(currentTurn);
       setCurrentTurn(nextPlayerIndex);
-      checkGameOver();
+      checkHandAndGameOver(nextPlayerIndex);
     },
     [
       currentTurn,
@@ -171,7 +192,7 @@ export const useOldMaidGame = () => {
       isCheckingInitialPairs,
       drawCard,
       findAndRemovePairs,
-      checkGameOver,
+      checkHandAndGameOver,
     ]
   );
 
@@ -203,7 +224,7 @@ export const useOldMaidGame = () => {
         drawCard(nextPlayerIndex, currentTurn);
         findAndRemovePairs(currentTurn);
         setCurrentTurn(nextPlayerIndex);
-        checkGameOver();
+        checkHandAndGameOver(nextPlayerIndex);
       }, 1000);
 
       return () => clearTimeout(timer);
@@ -215,7 +236,7 @@ export const useOldMaidGame = () => {
     isCoinTossing,
     isCheckingInitialPairs,
     drawCard,
-    checkGameOver,
+    checkHandAndGameOver,
     findAndRemovePairs,
   ]);
 

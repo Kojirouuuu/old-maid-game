@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-black text-white font-sans antialiased;
+  }
+}
+
+/* Card hover effects */
+@keyframes cardGlow {
+  0% {
+    box-shadow: 0 0 5px theme("colors.yellow.500/20"),
+      0 0 10px theme("colors.yellow.500/20"),
+      0 0 15px theme("colors.yellow.500/20");
+  }
+  50% {
+    box-shadow: 0 0 10px theme("colors.yellow.500/30"),
+      0 0 20px theme("colors.yellow.500/30"),
+      0 0 30px theme("colors.yellow.500/30");
+  }
+  100% {
+    box-shadow: 0 0 5px theme("colors.yellow.500/20"),
+      0 0 10px theme("colors.yellow.500/20"),
+      0 0 15px theme("colors.yellow.500/20");
+  }
+}
+
+.hover\:card-glow:hover {
+  animation: cardGlow 2s infinite;
+}

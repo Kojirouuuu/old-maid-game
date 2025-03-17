@@ -1,0 +1,14 @@
+{
+  "resourceName": "s34e9d1b49",
+  "policyUUID": "4e9d1b49",
+  "bucketName": "demogameappde99710fc9a7487ea9bd0a58a1dadc4f",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

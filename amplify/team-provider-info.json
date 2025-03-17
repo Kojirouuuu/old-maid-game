@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-demogameapp-dev-91d64-authRole",
+      "UnauthRoleArn": "arn:aws:iam::266735802934:role/amplify-demogameapp-dev-91d64-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::266735802934:role/amplify-demogameapp-dev-91d64-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-demogameapp-dev-91d64-deployment",
+      "UnauthRoleName": "amplify-demogameapp-dev-91d64-unauthRole",
+      "StackName": "amplify-demogameapp-dev-91d64",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:266735802934:stack/amplify-demogameapp-dev-91d64/9805f380-0371-11f0-8bee-06ada7028ae3",
+      "AmplifyAppId": "d3pg43321ly7w3"
+    },
+    "categories": {
+      "auth": {
+        "demogameapp02dbfce0": {}
+      },
+      "storage": {
+        "s34e9d1b49": {}
+      }
+    }
+  }
+}
